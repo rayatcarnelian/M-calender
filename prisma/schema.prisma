@@ -1,0 +1,65 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model Event {
+  id        String   @id @default(cuid())
+  title     String
+  start     DateTime
+  end       DateTime?
+  type      String   @default("meeting") // "meeting" | "social"
+  platform  String?  // "linkedin" | "twitter" | "instagram" etc.
+  content   String?
+  color     String?  // backgroundColor
+  imageUrl  String?  // AI-generated image URL
+  status    String   @default("pending") // "pending" | "published" | "failed"
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model BusinessProfile {
+  id              String   @id @default(cuid())
+  businessName    String
+  industry        String
+  targetAudience  String
+  platforms       String   // comma-separated: "linkedin,twitter,instagram"
+  brandVoice      String
+  monthlyTheme    String?
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+}
+
+model Settings {
+  id                    String   @id @default("default")
+  // Facebook / Meta
+  facebookClientId      String?
+  facebookClientSecret  String?
+  facebookAccessToken   String?
+  // Instagram (uses Meta Graph API, same app as Facebook)
+  instagramAccessToken  String?
+  // X (Twitter)
+  twitterClientId       String?
+  twitterClientSecret   String?
+  twitterAccessToken    String?
+  // LinkedIn
+  linkedinClientId      String?
+  linkedinClientSecret  String?
+  linkedinAccessToken   String?
+  // YouTube (Google)
+  youtubeClientId       String?
+  youtubeClientSecret   String?
+  youtubeAccessToken    String?
+  youtubeRefreshToken   String?
+  // AI Provider Keys
+  geminiApiKey          String?
+  groqApiKey            String?
+  falApiKey             String?
+  apifyApiKey           String?
+  createdAt             DateTime @default(now())
+  updatedAt             DateTime @updatedAt
+}
