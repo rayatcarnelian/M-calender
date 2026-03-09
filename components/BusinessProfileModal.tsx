@@ -110,20 +110,27 @@ export default function BusinessProfileModal({
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/40 backdrop-blur-sm p-4" onClick={onClose}>
-      <div className="bg-white border border-slate-200 rounded-2xl w-full max-w-xl shadow-2xl overflow-hidden" onClick={(e) => e.stopPropagation()}>
-        
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-md p-4 animate-in fade-in duration-300">
+      <div className="bg-zinc-950/90 border border-white/10 w-full max-w-xl rounded-3xl shadow-[0_0_50px_rgba(0,0,0,0.5)] overflow-hidden flex flex-col font-sans backdrop-blur-2xl">
         {/* Header */}
-        <div className="px-8 pt-8 pb-4">
-          <h2 className="text-xl font-bold text-slate-800 tracking-tight">Business Profile</h2>
-          <p className="text-sm text-slate-500 mt-1">Help the AI understand your brand</p>
-          
-          {/* Step indicator */}
-          <div className="flex gap-2 mt-5">
-            {[1, 2, 3].map((s) => (
-              <div key={s} className={`h-1 flex-1 rounded-full transition-colors ${s <= step ? "bg-blue-600" : "bg-slate-100"}`} />
-            ))}
-          </div>
+        <div className="px-8 py-6 border-b border-white/5 flex items-center bg-white/[0.02]">
+          <h2 className="text-xl font-bold text-white tracking-wide">
+            {existingProfile ? "Edit Profile" : "Set Up Business Profile"}
+          </h2>
+          <div className="flex-grow" />
+          <button
+            onClick={onClose}
+            className="text-zinc-500 hover:text-white hover:bg-white/10 p-2 rounded-xl transition-colors"
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+          </button>
+        </div>
+        
+        {/* Step indicator */}
+        <div className="flex gap-2 mt-5 px-8">
+          {[1, 2, 3].map((s) => (
+            <div key={s} className={`h-1 flex-1 rounded-full transition-colors ${s <= step ? "bg-indigo-500" : "bg-zinc-700"}`} />
+          ))}
         </div>
 
         {/* Body */}
@@ -148,8 +155,8 @@ export default function BusinessProfileModal({
                 </div>
               </div>
               <div>
-                <label className="block text-sm font-semibold text-slate-700 mb-2">Industry</label>
-                <div className="grid grid-cols-2 gap-2">
+                <label className="block text-sm font-semibold text-zinc-300 mb-2">Industry</label>
+                <div className="grid grid-cols-2 gap-3">
                   {INDUSTRIES.map((ind) => (
                     <button
                       key={ind.name}
@@ -157,10 +164,10 @@ export default function BusinessProfileModal({
                         setProfile({ ...profile, industry: ind.name, targetAudience: ind.audience });
                         fetchSuggestedName(ind.name);
                       }}
-                      className={`text-left px-3 py-2.5 rounded-lg text-sm transition-all font-medium ${
+                      className={`text-left px-4 py-3 rounded-xl text-sm transition-all font-medium border ${
                         profile.industry === ind.name
-                          ? "bg-blue-50 text-blue-700 border border-blue-200 shadow-sm"
-                          : "bg-slate-50 text-slate-600 border border-slate-200 hover:bg-slate-100"
+                          ? "bg-indigo-500/20 text-indigo-300 border-indigo-500/50 shadow-[0_0_15px_rgba(99,102,241,0.2)]"
+                          : "bg-white/5 text-zinc-400 border-white/10 hover:bg-white/10 hover:text-white"
                       }`}
                     >
                       {ind.name}
@@ -172,31 +179,31 @@ export default function BusinessProfileModal({
           )}
 
           {step === 2 && (
-            <div className="flex flex-col gap-5">
+            <div className="flex flex-col gap-6">
               <div>
-                <label className="block text-sm font-semibold text-slate-700 mb-2">Target Audience</label>
+                <label className="block text-sm font-semibold text-zinc-300 mb-2">Target Audience</label>
                 <input
                   type="text"
                   value={profile.targetAudience}
                   onChange={(e) => setProfile({ ...profile, targetAudience: e.target.value })}
-                  className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all shadow-sm"
+                  className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white placeholder-zinc-600 focus:outline-none focus:ring-2 focus:ring-indigo-500/50 focus:border-indigo-500 transition-all shadow-inner"
                   placeholder="e.g., Small business owners, Tech founders"
                 />
               </div>
               <div>
-                <label className="block text-sm font-semibold text-slate-700 mb-3">Platforms</label>
-                <div className="grid grid-cols-2 gap-2">
+                <label className="block text-sm font-semibold text-zinc-300 mb-3">Platforms</label>
+                <div className="grid grid-cols-2 gap-3">
                   {PLATFORMS.map((p) => (
                     <button
                       key={p.id}
                       onClick={() => togglePlatform(p.id)}
-                      className={`flex items-center gap-2.5 px-3 py-2.5 rounded-lg text-sm transition-all font-medium ${
+                      className={`flex items-center gap-3 px-4 py-3 rounded-xl text-sm transition-all font-medium border ${
                         profile.platforms.includes(p.id)
-                          ? "bg-blue-50 text-blue-700 border border-blue-200 shadow-sm"
-                          : "bg-slate-50 text-slate-600 border border-slate-200 hover:bg-slate-100"
+                          ? "bg-indigo-500/20 text-indigo-300 border-indigo-500/50 shadow-[0_0_15px_rgba(99,102,241,0.2)]"
+                          : "bg-white/5 text-zinc-400 border-white/10 hover:bg-white/10 hover:text-white"
                       }`}
                     >
-                      <div className="w-6 h-6 rounded flex items-center justify-center bg-slate-200/50 text-slate-500 text-[10px] font-bold uppercase tracking-wider">
+                      <div className="w-8 h-8 rounded-lg flex items-center justify-center bg-white/5 text-zinc-500 text-[10px] font-bold uppercase tracking-wider border border-white/5">
                         {p.icon}
                       </div>
                       {p.label}
@@ -208,33 +215,33 @@ export default function BusinessProfileModal({
           )}
 
           {step === 3 && (
-            <div className="flex flex-col gap-5">
+            <div className="flex flex-col gap-6">
               <div>
-                <label className="block text-sm font-semibold text-slate-700 mb-3">Brand Voice</label>
-                <div className="flex flex-col gap-2">
+                <label className="block text-sm font-semibold text-zinc-300 mb-3">Brand Voice</label>
+                <div className="flex flex-col gap-3">
                   {VOICES.map((v) => (
                     <button
                       key={v.id}
                       onClick={() => setProfile({ ...profile, brandVoice: v.id })}
-                      className={`flex flex-col text-left px-4 py-3 rounded-lg transition-all ${
+                      className={`flex flex-col text-left px-5 py-4 rounded-xl transition-all border ${
                         profile.brandVoice === v.id
-                          ? "bg-blue-50 border border-blue-200 shadow-sm"
-                          : "bg-slate-50 border border-slate-200 hover:bg-slate-100"
+                          ? "bg-indigo-500/20 border-indigo-500/50 shadow-[0_0_15px_rgba(99,102,241,0.2)]"
+                          : "bg-white/5 border-white/10 hover:bg-white/10"
                       }`}
                     >
-                      <span className={`text-sm font-bold ${profile.brandVoice === v.id ? "text-blue-700" : "text-slate-700"}`}>{v.label}</span>
-                      <span className="text-xs text-slate-500 mt-0.5 font-medium">{v.desc}</span>
+                      <span className={`text-sm font-bold tracking-wide ${profile.brandVoice === v.id ? "text-indigo-300" : "text-white"}`}>{v.label}</span>
+                      <span className="text-xs text-zinc-500 mt-1 font-medium">{v.desc}</span>
                     </button>
                   ))}
                 </div>
               </div>
               <div>
-                <label className="block text-sm font-semibold text-slate-700 mb-2">Monthly Theme (optional)</label>
+                <label className="block text-sm font-semibold text-zinc-300 mb-2">Monthly Theme (optional)</label>
                 <input
                   type="text"
                   value={profile.monthlyTheme}
                   onChange={(e) => setProfile({ ...profile, monthlyTheme: e.target.value })}
-                  className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all shadow-sm"
+                  className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white placeholder-zinc-600 focus:outline-none focus:ring-2 focus:ring-indigo-500/50 focus:border-indigo-500 transition-all shadow-inner"
                   placeholder="e.g., AI tools for productivity"
                 />
               </div>
@@ -243,11 +250,11 @@ export default function BusinessProfileModal({
         </div>
 
         {/* Footer */}
-        <div className="px-8 pb-8 flex items-center gap-3">
+        <div className="px-8 pb-8 pt-4 flex items-center gap-3 bg-white/[0.02] border-t border-white/5">
           {step > 1 && (
             <button
               onClick={() => setStep(step - 1)}
-              className="py-2.5 px-5 text-sm font-medium text-slate-500 hover:text-slate-800 transition-colors"
+              className="py-3 px-6 text-sm font-semibold text-zinc-400 hover:text-white transition-colors border border-transparent hover:border-white/10 rounded-xl hover:bg-white/5"
             >
               Back
             </button>
@@ -257,7 +264,7 @@ export default function BusinessProfileModal({
             <button
               onClick={() => setStep(step + 1)}
               disabled={!canProceed()}
-              className="py-2.5 px-6 bg-slate-900 text-white shadow-md rounded-lg text-sm font-semibold hover:bg-slate-800 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+              className="py-3 px-8 bg-white text-black shadow-[0_0_20px_rgba(255,255,255,0.1)] rounded-xl text-sm font-bold hover:bg-zinc-200 transition-all disabled:opacity-50 disabled:cursor-not-allowed hover:-translate-y-0.5 hover:shadow-[0_0_30px_rgba(255,255,255,0.2)]"
             >
               Continue
             </button>
@@ -265,7 +272,7 @@ export default function BusinessProfileModal({
             <button
               onClick={handleSave}
               disabled={!canProceed()}
-              className="py-2.5 px-6 bg-blue-600 text-white shadow-md rounded-lg text-sm font-semibold hover:bg-blue-700 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+              className="py-3 px-8 bg-indigo-600 text-white shadow-[0_0_20px_rgba(79,70,229,0.4)] rounded-xl text-sm font-bold hover:bg-indigo-500 transition-all disabled:opacity-50 disabled:cursor-not-allowed hover:-translate-y-0.5 hover:shadow-[0_0_30px_rgba(79,70,229,0.6)]"
             >
               Save Profile
             </button>

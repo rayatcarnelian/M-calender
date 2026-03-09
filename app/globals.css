@@ -47,3 +47,26 @@ a {
   background: var(--color-border);
   border-radius: 3px;
 }
+
+/* Base FullCalendar Overrides for Custom HTML Events */
+.fc .fc-event,
+.fc .fc-h-event,
+.fc .fc-v-event {
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+.fc .fc-event-main {
+  padding: 0 !important;
+  margin: 0 !important;
+  display: block !important;
+  width: 100% !important;
+  height: 100% !important;
+}
+
+.fc .fc-daygrid-event-harness {
+  margin-bottom: 4px !important;
+}

@@ -48,9 +48,29 @@ export async function GET() {
         connected: !!settings.falApiKey,
         maskedKey: settings.falApiKey ? `****${settings.falApiKey.slice(-4)}` : null,
       },
+      together: {
+        connected: !!settings.togetherApiKey,
+        maskedKey: settings.togetherApiKey ? `****${settings.togetherApiKey.slice(-4)}` : null,
+      },
       apify: {
         connected: !!settings.apifyApiKey,
         maskedKey: settings.apifyApiKey ? `****${settings.apifyApiKey.slice(-4)}` : null,
+      },
+      pexels: {
+        connected: !!settings.pexelsApiKey,
+        maskedKey: settings.pexelsApiKey ? `****${settings.pexelsApiKey.slice(-4)}` : null,
+      },
+      elevenLabs: {
+        connected: !!settings.elevenLabsApiKey,
+        maskedKey: settings.elevenLabsApiKey ? `****${settings.elevenLabsApiKey.slice(-4)}` : null,
+      },
+      rapid: {
+        connected: !!settings.rapidApiKey,
+        maskedKey: settings.rapidApiKey ? `****${settings.rapidApiKey.slice(-4)}` : null,
+      },
+      youtubeApiKey: { // This is for the general YouTube API key, not OAuth token
+        connected: !!settings.youtubeApiKey,
+        maskedKey: settings.youtubeApiKey ? `****${settings.youtubeApiKey.slice(-4)}` : null,
       },
     });
   } catch (error) {
@@ -72,7 +92,8 @@ export async function POST(req: NextRequest) {
       "twitterClientId", "twitterClientSecret", "twitterAccessToken",
       "linkedinClientId", "linkedinClientSecret", "linkedinAccessToken",
       "youtubeClientId", "youtubeClientSecret", "youtubeAccessToken", "youtubeRefreshToken",
-      "geminiApiKey", "groqApiKey", "falApiKey", "apifyApiKey"
+      "geminiApiKey", "groqApiKey", "falApiKey", "apifyApiKey", "togetherApiKey", "pexelsApiKey", "elevenLabsApiKey",
+      "rapidApiKey", "youtubeApiKey"
     ];
 
     const data: Record<string, string> = {};
@@ -137,6 +158,15 @@ export async function DELETE(req: NextRequest) {
         break;
       case "apify":
         clearData.apifyApiKey = null;
+        break;
+      case "together":
+        clearData.togetherApiKey = null;
+        break;
+      case "pexels":
+        clearData.pexelsApiKey = null;
+        break;
+      case "elevenLabs":
+        clearData.elevenLabsApiKey = null;
         break;
       default:
         return NextResponse.json({ error: "Unknown platform" }, { status: 400 });

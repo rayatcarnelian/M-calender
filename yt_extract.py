@@ -1,6 +1,6 @@
 import sys
 import json
-from youtube_transcript_api import YouTubeTranscriptApi
+from youtube_transcript_api import YouTubeTranscriptApi  # type: ignore
 
 def get_transcript(video_id):
     try:

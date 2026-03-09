@@ -32,6 +32,7 @@ export async function POST(request: NextRequest) {
           content: e.content || null,
           color: e.color || null,
           imageUrl: e.imageUrl || null,
+          videoUrl: e.videoUrl || null,
         })),
       });
       return NextResponse.json({ count: events.count }, { status: 201 });
@@ -46,6 +47,7 @@ export async function POST(request: NextRequest) {
           content: body.content || null,
           color: body.color || null,
           imageUrl: body.imageUrl || null,
+          videoUrl: body.videoUrl || null,
         },
       });
       return NextResponse.json(event, { status: 201 });

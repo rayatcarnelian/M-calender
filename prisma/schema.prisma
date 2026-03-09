@@ -16,10 +16,12 @@ model Event {
   platform  String?  // "linkedin" | "twitter" | "instagram" etc.
   content   String?
   color     String?  // backgroundColor
-  imageUrl  String?  // AI-generated image URL
-  status    String   @default("pending") // "pending" | "published" | "failed"
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  imageUrl     String?  // AI-generated image URL
+  videoUrl     String?  // Uploaded completed MP4 video
+  assetPackRef String?  // Reference to the downloaded asset pack if applicable
+  status       String   @default("pending") // "pending" | "published" | "failed"
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
 }
 
 model BusinessProfile {
@@ -60,6 +62,37 @@ model Settings {
   groqApiKey            String?
   falApiKey             String?
   apifyApiKey           String?
+  togetherApiKey        String?
+  pexelsApiKey          String?
+  elevenLabsApiKey      String? // Host A
+  elevenLabsApiKey2     String? // Host B
+  
+  // Data Scraper Keys
+  rapidApiKey           String?
+  youtubeApiKey         String?
+  
   createdAt             DateTime @default(now())
   updatedAt             DateTime @updatedAt
+}
+
+model TrendingVideo {
+  id              String   @id @default(cuid())
+  platform        String   // "youtube", "tiktok", "instagram"
+  url             String
+  author          String?
+  title           String?
+  thumbnailUrl    String?
+  views           Int      @default(0)
+  likes           Int      @default(0)
+  comments        Int      @default(0)
+  scrapedAt       DateTime @default(now())
+  isAnalyzed      Boolean  @default(false)
+  
+  // Data populated after AI analysis
+  hookExposed     String?
+  visualStyle     String?
+  masterPrompt    String?
+  toolsIdentified String?  // JSON: tools/software the creator likely used
+  stepByStepGuide String?  // JSON: step-by-step recreation guide
+  costBreakdown   String?  // JSON: free/budget/premium cost tiers
 }

@@ -179,7 +179,7 @@ export default function ContentGeneratorModal({
                     </div>
                     <div>
                       <p className="text-sm font-bold text-indigo-900">AI Image Generation</p>
-                      <p className="text-[11px] font-medium text-indigo-700/70 mt-0.5">Generate a custom image for each post via Fal.ai</p>
+                      <p className="text-[11px] font-medium text-indigo-700/70 mt-0.5">Generate a custom AI image for each post</p>
                     </div>
                   </div>
                   <button
@@ -195,7 +195,7 @@ export default function ContentGeneratorModal({
                 </div>
                 {withImages && (
                   <p className="text-[10px] font-semibold text-indigo-800/60 mt-3 pl-[56px]">
-                    Uses your Fal.ai subscription • FLUX Schnell model • ~30 images
+                    Uses AI image generation • FLUX Schnell model • ~30 images
                   </p>
                 )}
               </div>
@@ -225,7 +225,7 @@ export default function ContentGeneratorModal({
                   style={{ width: `${totalImages > 0 ? (imageProgress / totalImages) * 100 : 0}%` }}
                 />
               </div>
-              <p className="text-xs font-medium text-slate-400">Using Fal.ai FLUX Schnell • This may take a few minutes</p>
+              <p className="text-xs font-medium text-slate-400">Using AI FLUX Schnell model • This may take a few minutes</p>
             </div>
           )}
 

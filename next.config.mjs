@@ -1,4 +1,6 @@
 /** @type {import('next').NextConfig} */
-const nextConfig = {};
+const nextConfig = {
+  serverExternalPackages: ['yt-search', 'cheerio', 'ffmpeg-static'],
+};
 
 export default nextConfig;
