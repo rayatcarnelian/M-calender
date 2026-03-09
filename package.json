@@ -2,6 +2,9 @@
   "name": "volts-smart-calendar",
   "version": "0.1.0",
   "private": true,
+  "engines": {
+    "node": ">=20"
+  },
   "scripts": {
     "dev": "next dev -H 127.0.0.1",
     "build": "prisma generate && next build",
