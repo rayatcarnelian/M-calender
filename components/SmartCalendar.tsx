@@ -175,6 +175,31 @@ export default function SmartCalendar({ externalEvents = [], onAddEvent, onUpdat
           border-radius: 0 10px 10px 0 !important;
         }
 
+        @media (max-width: 640px) {
+          .fc .fc-toolbar-title {
+            font-size: 1.1rem;
+          }
+          .fc .fc-button {
+            padding: 4px 8px;
+            font-size: 0.7rem;
+          }
+          .fc-header-toolbar {
+            flex-direction: column !important;
+            gap: 10px !important;
+          }
+          .fc .fc-col-header-cell-cushion {
+            font-size: 0.6rem;
+            padding: 8px 2px;
+          }
+          .fc .fc-daygrid-day-number {
+            font-size: 0.7rem;
+            padding: 4px;
+          }
+          .fc .fc-event {
+            min-height: 40px !important;
+          }
+        }
+
         .fc .fc-col-header-cell-cushion {
           padding: 12px 4px;
           color: #71717a;

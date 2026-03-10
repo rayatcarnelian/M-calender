@@ -22,8 +22,21 @@ export async function POST(request: Request) {
       `${keyword} trending 2026`,
     ];
 
-    const searchPromises = queries.map(q => yts(q));
-    const results = await Promise.all(searchPromises);
+    const searchPromises = queries.map(q => 
+      Promise.race([
+        yts(q),
+        new Promise<any>((_, reject) => setTimeout(() => reject(new Error('Timeout scraping YouTube')), 8000))
+      ])
+    );
+    
+    const resultsSettled = await Promise.allSettled(searchPromises);
+    const results = resultsSettled
+      .filter((r): r is PromiseFulfilledResult<any> => r.status === 'fulfilled')
+      .map(r => r.value);
+
+    if (results.length === 0) {
+      return NextResponse.json({ error: "Search timed out or returned no results. Please try again." }, { status: 504 });
+    }
 
     // Merge all results, deduplicate by video ID
     const seen = new Set<string>();

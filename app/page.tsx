@@ -255,7 +255,7 @@ export default function Home() {
         </aside>
 
         {/* Main Calendar Area */}
-        <div className="flex-grow flex flex-col p-5 overflow-hidden">
+        <div className="flex-grow flex flex-col p-2 lg:p-5 overflow-hidden min-h-[500px] lg:min-h-0">
           <SmartCalendar 
             externalEvents={dbEvents} 
             onAddEvent={handleAddEvent} 
