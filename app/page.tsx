@@ -7,6 +7,7 @@ import ContentGeneratorModal, { GeneratedPost } from "@/components/ContentGenera
 import IntegrationsModal from "@/components/IntegrationsModal";
 import CompetitorSpyModal from "@/components/CompetitorSpyModal";
 import Link from "next/link";
+import { Show, SignInButton, UserButton } from "@clerk/nextjs";
 
 export default function Home() {
   const [profile, setProfile] = useState<BusinessProfile | null>(null);
@@ -17,12 +18,22 @@ export default function Home() {
   const [selectedEvent, setSelectedEvent] = useState<any | null>(null);
   const [dbEvents, setDbEvents] = useState<any[]>([]);
 
-  // Load events from DB on mount
-  const fetchEvents = useCallback(async () => {
+  // Load events and profile from DB on mount
+  const fetchData = useCallback(async () => {
     try {
-      const res = await fetch("/api/events");
-      if (res.ok) {
-        const data = await res.json();
+      // Fetch Profile
+      const profRes = await fetch("/api/profile");
+      if (profRes.ok) {
+        const profData = await profRes.json();
+        if (profData.profile) {
+          setProfile(profData.profile);
+        }
+      }
+
+      // Fetch Events
+      const evRes = await fetch("/api/events");
+      if (evRes.ok) {
+        const data = await evRes.json();
         setDbEvents(data.map((e: any) => ({
           id: e.id,
           title: e.status === "published" ? `✅ ${e.title}` : e.title,
@@ -39,13 +50,13 @@ export default function Home() {
         })));
       }
     } catch (err) {
-      console.error("Failed to load events:", err);
+      console.error("Failed to load data:", err);
     }
   }, []);
 
   useEffect(() => {
-    fetchEvents();
-  }, [fetchEvents]);
+    fetchData();
+  }, [fetchData]);
 
   // Save generated content to DB
   const handleGenerateContent = async (posts: GeneratedPost[]) => {
@@ -69,7 +80,7 @@ export default function Home() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(newEvents),
       });
-      fetchEvents(); // Reload from DB
+      fetchData(); // Reload from DB
     } catch (err) {
       console.error("Failed to save events:", err);
     }
@@ -89,7 +100,7 @@ export default function Home() {
           videoUrl: event.videoUrl,
         }),
       });
-      fetchEvents();
+      fetchData();
     } catch (err) {
       console.error("Failed to save event:", err);
     }
@@ -107,7 +118,7 @@ export default function Home() {
           end: eventInfo.end?.toISOString()
         }),
       });
-      fetchEvents();
+      fetchData();
     } catch (err) {
       console.error("Failed to update event dates:", err);
     }
@@ -117,7 +128,7 @@ export default function Home() {
     try {
       await fetch(`/api/events?id=${id}`, { method: "DELETE" });
       setSelectedEvent(null);
-      fetchEvents();
+      fetchData();
     } catch (err) {
       console.error("Failed to delete event:", err);
     }
@@ -153,9 +164,16 @@ export default function Home() {
               {profile.businessName}
             </button>
           )}
-          <div className="w-9 h-9 rounded-full bg-slate-100 border border-slate-200 flex items-center justify-center text-sm font-bold text-slate-700 shadow-sm">
-            R
-          </div>
+          <Show when="signed-out">
+            <SignInButton mode="modal">
+              <button className="px-5 py-2 text-sm font-semibold text-white bg-indigo-600 hover:bg-indigo-500 rounded-full transition-all">
+                Sign In
+              </button>
+            </SignInButton>
+          </Show>
+          <Show when="signed-in">
+            <UserButton appearance={{ elements: { avatarBox: "w-10 h-10" } }} />
+          </Show>
         </div>
       </nav>
 
@@ -244,8 +262,17 @@ export default function Home() {
       <BusinessProfileModal
         isOpen={showProfileModal}
         onClose={() => setShowProfileModal(false)}
-        onSave={(p) => {
+        onSave={async (p) => {
           setProfile(p);
+          try {
+            await fetch("/api/profile", {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify(p),
+            });
+          } catch (e) {
+            console.error("Failed to save profile:", e);
+          }
           setShowContentModal(true);
         }}
         existingProfile={profile}

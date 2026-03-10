@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
 import yts from 'yt-search';
+import { auth } from "@clerk/nextjs/server";
 
 export async function POST(request: Request) {
   try {
@@ -55,16 +56,24 @@ export async function POST(request: Request) {
 
     console.log(`[Trend Scraper] Found ${allVideos.length} unique videos, returning top ${topVideos.length}`);
 
+    const { userId } = await auth();
+    if (!userId) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+
     // Cache to database and collect DB records with Prisma IDs
     const dbVideos = [];
     for (const video of topVideos) {
       try {
-        const existing = await prisma.trendingVideo.findFirst({ where: { url: video.url }});
+        const existing = await prisma.trendingVideo.findFirst({ 
+          where: { url: video.url, userId }
+        });
         if (existing) {
           dbVideos.push(existing);
         } else {
           const created = await prisma.trendingVideo.create({
             data: {
+              userId,
               platform: video.platform,
               url: video.url,
               author: video.author,

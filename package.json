@@ -6,7 +6,7 @@
     "node": ">=20"
   },
   "scripts": {
-    "dev": "next dev -H 127.0.0.1",
+    "dev": "next dev",
     "build": "prisma generate && next build",
     "postinstall": "prisma generate",
     "start": "next start",
@@ -14,6 +14,7 @@
     "test:ui": "node scripts/qa-test.js"
   },
   "dependencies": {
+    "@clerk/nextjs": "^7.0.2",
     "@fal-ai/client": "^1.9.4",
     "@fullcalendar/core": "^6.1.20",
     "@fullcalendar/daygrid": "^6.1.15",

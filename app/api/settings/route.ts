@@ -1,12 +1,18 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
+import { auth } from "@clerk/nextjs/server";
 
 // GET: Retrieve all platform connection statuses
 export async function GET() {
   try {
-    let settings = await prisma.settings.findUnique({ where: { id: "default" } });
+    const { userId } = await auth();
+    if (!userId) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+
+    let settings = await prisma.settings.findUnique({ where: { id: userId } });
     if (!settings) {
-      settings = await prisma.settings.create({ data: { id: "default" } });
+      settings = await prisma.settings.create({ data: { id: userId } });
     }
 
     // Return connection status and masked credentials for each platform
@@ -97,6 +103,11 @@ export async function GET() {
 // POST: Save credentials for any platform
 export async function POST(req: NextRequest) {
   try {
+    const { userId } = await auth();
+    if (!userId) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+
     const body = await req.json();
     // body can contain any combination of platform fields
     // e.g., { facebookClientId: "xxx", facebookClientSecret: "yyy" }
@@ -123,9 +134,9 @@ export async function POST(req: NextRequest) {
     }
 
     await prisma.settings.upsert({
-      where: { id: "default" },
+      where: { id: userId },
       update: data,
-      create: { id: "default", ...data },
+      create: { id: userId, ...data },
     });
 
     return NextResponse.json({ success: true });
@@ -138,6 +149,11 @@ export async function POST(req: NextRequest) {
 // DELETE: Disconnect a platform (clear its tokens)
 export async function DELETE(req: NextRequest) {
   try {
+    const { userId } = await auth();
+    if (!userId) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+
     const platform = req.nextUrl.searchParams.get("platform");
     if (!platform) {
       return NextResponse.json({ error: "Platform is required" }, { status: 400 });
@@ -188,7 +204,7 @@ export async function DELETE(req: NextRequest) {
     }
 
     await prisma.settings.update({
-      where: { id: "default" },
+      where: { id: userId },
       data: clearData as any,
     });
 

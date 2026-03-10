@@ -41,3 +41,7 @@ next_output.log
 # python
 .venv/
 __pycache__/
+.vercel
+
+# clerk configuration (can include secrets)
+/.clerk/

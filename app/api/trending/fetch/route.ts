@@ -1,14 +1,20 @@
 import { NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
+import { auth } from "@clerk/nextjs/server";
 
 export async function GET(request: Request) {
   try {
+    const { userId } = await auth();
+    if (!userId) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+
     const { searchParams } = new URL(request.url);
     const platform = searchParams.get('platform');
     
-    let whereClause = {};
+    let whereClause: any = { userId };
     if (platform && platform !== 'all') {
-        whereClause = { platform };
+        whereClause.platform = platform;
     }
 
     // Fetch trending videos, ordered by most recently scraped, then highest views

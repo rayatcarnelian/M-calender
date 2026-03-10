@@ -9,6 +9,7 @@ datasource db {
 
 model Event {
   id        String   @id @default(cuid())
+  userId    String   // Clerk user ID
   title     String
   start     DateTime
   end       DateTime?
@@ -26,6 +27,7 @@ model Event {
 
 model BusinessProfile {
   id              String   @id @default(cuid())
+  userId          String   @unique // One profile per user
   businessName    String
   industry        String
   targetAudience  String
@@ -37,7 +39,8 @@ model BusinessProfile {
 }
 
 model Settings {
-  id                    String   @id @default("default")
+  // Use Clerk userId as the primary key id
+  id                    String   @id 
   // Facebook / Meta
   facebookClientId      String?
   facebookClientSecret  String?
@@ -77,6 +80,7 @@ model Settings {
 
 model TrendingVideo {
   id              String   @id @default(cuid())
+  userId          String   // Clerk user ID
   platform        String   // "youtube", "tiktok", "instagram"
   url             String
   author          String?

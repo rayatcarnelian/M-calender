@@ -1,10 +1,17 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
+import { auth } from "@clerk/nextjs/server";
 
-// GET all events
+// GET all events for current user
 export async function GET() {
   try {
+    const { userId } = await auth();
+    if (!userId) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+
     const events = await prisma.event.findMany({
+      where: { userId },
       orderBy: { start: "asc" },
     });
 
@@ -19,12 +26,18 @@ export async function GET() {
 // POST create event(s)
 export async function POST(request: NextRequest) {
   try {
+    const { userId } = await auth();
+    if (!userId) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+
     const body = await request.json();
 
     // Support bulk creation (array) or single event
     if (Array.isArray(body)) {
       const events = await prisma.event.createMany({
         data: body.map((e: any) => ({
+          userId,
           title: e.title,
           start: new Date(e.start),
           end: e.end ? new Date(e.end) : null,
@@ -40,6 +53,7 @@ export async function POST(request: NextRequest) {
     } else {
       const event = await prisma.event.create({
         data: {
+          userId,
           title: body.title,
           start: new Date(body.start),
           end: body.end ? new Date(body.end) : null,
@@ -62,6 +76,11 @@ export async function POST(request: NextRequest) {
 // PUT update event (for drag and drop, edit)
 export async function PUT(request: NextRequest) {
   try {
+    const { userId } = await auth();
+    if (!userId) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+
     const body = await request.json();
     const { id, start, end, ...updateData } = body;
 
@@ -73,8 +92,8 @@ export async function PUT(request: NextRequest) {
     if (start) data.start = new Date(start);
     if (end !== undefined) data.end = end ? new Date(end) : null;
 
-    const event = await prisma.event.update({
-      where: { id },
+    const event = await prisma.event.updateMany({
+      where: { id, userId },
       data,
     });
 
@@ -88,14 +107,19 @@ export async function PUT(request: NextRequest) {
 // DELETE event by id (via query param ?id=xxx) or all events
 export async function DELETE(request: NextRequest) {
   try {
+    const { userId } = await auth();
+    if (!userId) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+
     const { searchParams } = new URL(request.url);
     const id = searchParams.get("id");
 
     if (id) {
-      await prisma.event.delete({ where: { id } });
+      await prisma.event.deleteMany({ where: { id, userId } });
       return NextResponse.json({ deleted: id });
     } else {
-      await prisma.event.deleteMany();
+      await prisma.event.deleteMany({ where: { userId } });
       return NextResponse.json({ deleted: "all" });
     }
   } catch (error) {
