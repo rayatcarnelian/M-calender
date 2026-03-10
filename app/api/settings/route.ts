@@ -37,35 +37,35 @@ export async function GET() {
         maskedToken: settings.youtubeAccessToken ? `****${settings.youtubeAccessToken.slice(-4)}` : null,
       },
       gemini: {
-        connected: !!settings.geminiApiKey,
+        connected: !!(settings.geminiApiKey || process.env.GEMINI_API_KEY),
         maskedKey: settings.geminiApiKey ? `****${settings.geminiApiKey.slice(-4)}` : null,
       },
       groq: {
-        connected: !!settings.groqApiKey,
+        connected: !!(settings.groqApiKey || process.env.GROQ_API_KEY),
         maskedKey: settings.groqApiKey ? `****${settings.groqApiKey.slice(-4)}` : null,
       },
       fal: {
-        connected: !!settings.falApiKey,
+        connected: !!(settings.falApiKey || process.env.FAL_API_KEY),
         maskedKey: settings.falApiKey ? `****${settings.falApiKey.slice(-4)}` : null,
       },
       together: {
-        connected: !!settings.togetherApiKey,
+        connected: !!(settings.togetherApiKey || process.env.TOGETHER_API_KEY),
         maskedKey: settings.togetherApiKey ? `****${settings.togetherApiKey.slice(-4)}` : null,
       },
       apify: {
-        connected: !!settings.apifyApiKey,
+        connected: !!(settings.apifyApiKey || process.env.APIFY_API_KEY),
         maskedKey: settings.apifyApiKey ? `****${settings.apifyApiKey.slice(-4)}` : null,
       },
       pexels: {
-        connected: !!settings.pexelsApiKey,
+        connected: !!(settings.pexelsApiKey || process.env.PEXELS_API_KEY),
         maskedKey: settings.pexelsApiKey ? `****${settings.pexelsApiKey.slice(-4)}` : null,
       },
       elevenLabs: {
-        connected: !!settings.elevenLabsApiKey,
+        connected: !!(settings.elevenLabsApiKey || process.env.ELEVENLABS_API_KEY),
         maskedKey: settings.elevenLabsApiKey ? `****${settings.elevenLabsApiKey.slice(-4)}` : null,
       },
       rapid: {
-        connected: !!settings.rapidApiKey,
+        connected: !!(settings.rapidApiKey || process.env.RAPID_API_KEY),
         maskedKey: settings.rapidApiKey ? `****${settings.rapidApiKey.slice(-4)}` : null,
       },
       youtubeApiKey: { // This is for the general YouTube API key, not OAuth token
