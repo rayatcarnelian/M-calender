@@ -25,15 +25,7 @@ interface PlatformConfig {
   clientSecretField: string;
 }
 
-interface AIProviderConfig {
-  id: string;
-  name: string;
-  icon: string;
-  color: string;
-  devUrl: string;
-  devInstructions: string[];
-  keyField: string;
-}
+
 
 const PLATFORMS: PlatformConfig[] = [
   {
@@ -123,119 +115,14 @@ const PLATFORMS: PlatformConfig[] = [
   },
 ];
 
-const AI_PROVIDERS: AIProviderConfig[] = [
-  {
-    id: "together",
-    name: "Together.ai (Free Images)",
-    icon: "img",
-    color: "#6366f1",
-    devUrl: "https://api.together.ai/settings/api-keys",
-    devInstructions: [
-      "Sign up at together.ai (FREE, no credit card)",
-      "Go to Settings → API Keys",
-      "Create a new key and copy it",
-      "60,000 free images/month included!",
-    ],
-    keyField: "togetherApiKey",
-  },
-  {
-    id: "pexels",
-    name: "Pexels (Free B-Roll)",
-    icon: "vid",
-    color: "#05a081",
-    devUrl: "https://www.pexels.com/api/new/",
-    devInstructions: [
-      "Sign up for a free Pexels account",
-      "Click the link above to go to the API section",
-      "Get your free API Key",
-      "This provides unlimited aesthetic B-Roll videos!",
-    ],
-    keyField: "pexelsApiKey",
-  },
-  {
-    id: "gemini",
-    name: "Google Gemini",
-    icon: "ai",
-    color: "#2b7bfb",
-    devUrl: "https://aistudio.google.com/app/apikey",
-    devInstructions: [
-      "Follow the link to Google AI Studio",
-      "Sign in with your Google account",
-      "Click 'Create API key' at the top left",
-      "Copy your key and paste it below",
-    ],
-    keyField: "geminiApiKey",
-  },
-  {
-    id: "elevenlabs",
-    name: "ElevenLabs (TTS)",
-    icon: "mic",
-    color: "#83a8f5",
-    devUrl: "https://elevenlabs.io/app/api-keys",
-    devInstructions: [
-      "Sign in to ElevenLabs",
-      "Click your profile picture in the bottom left, then 'Profile'",
-      "Click the API Keys tab",
-      "Copy your Secret API Key",
-    ],
-    keyField: "elevenLabsApiKey",
-  },
-  {
-    id: "fal",
-    name: "Fal.ai (Optional/Legacy)",
-    icon: "img",
-    color: "#a855f7",
-    devUrl: "https://fal.ai/dashboard/keys",
-    devInstructions: [
-      "Optional — Together.ai is now the primary image provider",
-      "Only needed if you prefer Fal.ai for premium models",
-      ],
-    keyField: "falApiKey",
-  },
-  {
-    id: "groq",
-    name: "Groq (Fast LLM)",
-    icon: "ai",
-    color: "#f55036",
-    devUrl: "https://console.groq.com/keys",
-    devInstructions: [
-      "Click the link above to open the Groq Console",
-      "Log in with your account",
-      "Click 'Create API Key'",
-      "Copy the key and paste it below",
-    ],
-    keyField: "groqApiKey",
-  },
-  {
-    id: "rapid",
-    name: "RapidAPI (Scraper)",
-    icon: "api",
-    color: "#00c853",
-    devUrl: "https://rapidapi.com/developer/dashboard",
-    devInstructions: [
-      "Sign up for a RapidAPI account",
-      "Go to your Dashboard",
-      "Copy your 'X-RapidAPI-Key'",
-      "Paste the key below to enable the AI Content Cloner",
-    ],
-    keyField: "rapidApiKey",
-  },
-];
+
 
 export default function IntegrationsModal({ isOpen, onClose }: IntegrationsModalProps) {
   const [statuses, setStatuses] = useState<Record<string, PlatformStatus>>({});
   const [expandedPlatform, setExpandedPlatform] = useState<string | null>(null);
   const [clientId, setClientId] = useState("");
   const [clientSecret, setClientSecret] = useState("");
-  const [geminiApiKey, setGeminiApiKey] = useState("");
-  const [groqApiKey, setGroqApiKey] = useState("");
-  const [falApiKey, setFalApiKey] = useState("");
-  const [togetherApiKey, setTogetherApiKey] = useState("");
-  const [elevenLabsApiKey, setElevenLabsApiKey] = useState("");
-  const [rapidApiKey, setRapidApiKey] = useState("");
-  const [youtubeApiKey, setYoutubeApiKey] = useState("");
   const [saving, setSaving] = useState(false);
-  const [apiKeyInput, setApiKeyInput] = useState("");
 
   const fetchStatuses = useCallback(async () => {
     try {
@@ -286,26 +173,6 @@ export default function IntegrationsModal({ isOpen, onClose }: IntegrationsModal
     setSaving(false);
   };
 
-  const handleSaveApiKey = async (provider: AIProviderConfig) => {
-    if (!apiKeyInput.trim()) return;
-    setSaving(true);
-    try {
-      await fetch("/api/settings", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          [provider.keyField]: apiKeyInput,
-        }),
-      });
-      await fetchStatuses();
-      setApiKeyInput("");
-      setExpandedPlatform(null);
-    } catch (e) {
-      console.error("Failed to save API key:", e);
-    }
-    setSaving(false);
-  };
-
   const handleConnect = (platformId: string) => {
     // Open the OAuth flow in a popup window
     const width = 600;
@@ -328,31 +195,6 @@ export default function IntegrationsModal({ isOpen, onClose }: IntegrationsModal
     window.open(url, "_blank");
   };
 
-  const getApiKeyInputState = (providerId: string) => {
-    switch (providerId) {
-      case "gemini": return geminiApiKey;
-      case "groq": return groqApiKey;
-      case "fal": return falApiKey;
-      case "together": return togetherApiKey;
-      case "elevenlabs": return elevenLabsApiKey;
-      case "rapid": return rapidApiKey;
-      case "youtube": return youtubeApiKey;
-      default: return "";
-    }
-  };
-
-  const setApiKeyInputState = (providerId: string, value: string) => {
-    switch (providerId) {
-      case "gemini": setGeminiApiKey(value); break;
-      case "groq": setGroqApiKey(value); break;
-      case "fal": setFalApiKey(value); break;
-      case "together": setTogetherApiKey(value); break;
-      case "elevenlabs": setElevenLabsApiKey(value); break;
-      case "rapid": setRapidApiKey(value); break;
-      case "youtube": setYoutubeApiKey(value); break;
-    }
-  };
-
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-md p-4 animate-in fade-in duration-300" onClick={onClose}>
       <div
@@ -361,9 +203,9 @@ export default function IntegrationsModal({ isOpen, onClose }: IntegrationsModal
       >
         {/* Header */}
         <div className="p-8 border-b border-white/5 flex-shrink-0 bg-white/[0.02]">
-          <h2 className="text-2xl font-bold text-white tracking-wide">System Integrations</h2>
+          <h2 className="text-2xl font-bold text-white tracking-wide">Social Integrations</h2>
           <p className="text-sm text-zinc-400 mt-2 font-medium">
-            Connect your accounts for automated publishing and AI insights.
+            Connect your social media accounts for automated publishing.
           </p>
         </div>
 
@@ -508,117 +350,7 @@ export default function IntegrationsModal({ isOpen, onClose }: IntegrationsModal
             );
           })}
 
-          <div className="pt-6 pb-2 border-t border-white/10 mt-4">
-            <h3 className="text-[11px] font-bold text-zinc-500 uppercase tracking-[0.2em] pl-1">AI Providers & Plugins</h3>
-            <p className="text-xs font-semibold text-zinc-400 pl-1 mt-1.5 mb-3">Configure models for content reverse-engineering and generation.</p>
-          </div>
 
-          {AI_PROVIDERS.map((provider) => {
-            const status = statuses[provider.id] || { connected: false, maskedKey: null };
-            const isExpanded = expandedPlatform === provider.id;
-
-            return (
-              <div
-                key={provider.id}
-                className="rounded-2xl border border-white/10 bg-white/5 overflow-hidden transition-all shadow-lg hover:border-white/20"
-              >
-                {/* Provider Header Row */}
-                <div className="flex items-center justify-between p-5 bg-black/20">
-                  <div className="flex items-center gap-4">
-                    <div
-                      className="w-12 h-12 rounded-xl flex items-center justify-center text-[11px] font-bold uppercase tracking-wider border border-white/10 shadow-[0_0_15px_rgba(255,255,255,0.05)] bg-white/5"
-                      style={{ color: provider.color, borderColor: `${provider.color}40`, boxShadow: `0 0 20px ${provider.color}20` }}
-                    >
-                      {provider.icon}
-                    </div>
-                    <div>
-                      <p className="text-sm font-bold text-slate-800">{provider.name}</p>
-                      <p className="text-xs font-semibold mt-0.5">
-                        {status.connected ? (
-                          <span className="text-emerald-600 flex items-center gap-1.5">
-                            <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 inline-block" />
-                            Connected {status.maskedKey ? `(${status.maskedKey})` : ""}
-                          </span>
-                        ) : (
-                          <span className="text-slate-400">Not set up (Using generic fallback)</span>
-                        )}
-                      </p>
-                    </div>
-                  </div>
-
-                  {/* Action Button */}
-                  <div className="flex items-center gap-3">
-                    {status.connected ? (
-                      <button
-                        onClick={() => handleDisconnect(provider.id)}
-                        className="text-xs font-bold text-red-400 hover:text-red-300 hover:bg-red-500/10 rounded-xl transition-colors px-4 py-2 border border-transparent hover:border-red-500/20"
-                      >
-                        Disconnect
-                      </button>
-                    ) : (
-                      <button
-                        onClick={() => {
-                          setExpandedPlatform(isExpanded ? null : provider.id);
-                          setApiKeyInput("");
-                        }}
-                        className="px-5 py-2.5 bg-white/5 text-white text-xs font-bold rounded-xl hover:bg-white/10 transition-all border border-white/10 shadow-lg"
-                      >
-                        {isExpanded ? "Cancel" : "Provide Key"}
-                      </button>
-                    )}
-                  </div>
-                </div>
-
-                {/* Expanded Setup Guide */}
-                {isExpanded && !status.connected && (
-                  <div className="px-5 pb-5 pt-3 border-t border-white/5 bg-black/40">
-                    {/* Instructions */}
-                    <div className="mt-3 mb-6">
-                      <div className="flex items-center justify-between mb-4">
-                        <p className="text-[11px] font-bold text-zinc-500 uppercase tracking-[0.2em]">How to get a key</p>
-                        <button
-                          onClick={() => handleOpenDevPortal(provider.devUrl)}
-                          className="text-[10px] font-bold px-4 py-2 rounded-xl transition-all hover:-translate-y-0.5 text-white shadow-[0_0_15px_rgba(255,255,255,0.1)]"
-                          style={{ backgroundColor: provider.color, boxShadow: `0 0 20px ${provider.color}40` }}
-                        >
-                          Get API Key Here →
-                        </button>
-                      </div>
-                      <ol className="space-y-2 pl-4 mb-5">
-                        {provider.devInstructions.map((step, i) => (
-                          <li key={i} className="text-xs font-semibold text-zinc-400 leading-relaxed list-decimal">
-                            {step}
-                          </li>
-                        ))}
-                      </ol>
-                    </div>
-
-                    {/* Input field */}
-                    <div className="space-y-4 bg-white/5 p-5 rounded-2xl border border-white/10 shadow-inner">
-                      <div>
-                        <label className="block text-[11px] font-bold text-zinc-500 uppercase tracking-widest mb-2">Secret API Key</label>
-                        <input
-                          type="password"
-                          value={apiKeyInput}
-                          onChange={(e) => setApiKeyInput(e.target.value)}
-                          className="w-full bg-black/20 border border-white/10 rounded-xl px-4 py-3 text-sm text-white placeholder-zinc-600 focus:outline-none focus:ring-2 focus:ring-indigo-500/50 shadow-inner"
-                          placeholder="Paste your API Key here..."
-                        />
-                      </div>
-                      <button
-                        onClick={() => handleSaveApiKey(provider)}
-                        disabled={saving || !apiKeyInput.trim()}
-                        className="w-full py-3.5 text-white text-xs font-bold rounded-xl transition-all shadow-lg active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed hover:-translate-y-0.5 mt-3"
-                        style={{ backgroundColor: provider.color, boxShadow: `0 0 20px ${provider.color}40` }}
-                      >
-                        {saving ? "Saving..." : "Save API Key"}
-                      </button>
-                    </div>
-                  </div>
-                )}
-              </div>
-            );
-          })}
         </div>
 
         {/* Footer */}
