@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
-import yts from 'yt-search';
+import { youtube } from 'scrape-youtube';
 import { getServerSession } from "next-auth/next";
 import { authOptions } from "@/lib/auth";
 export async function POST(request: Request) {
@@ -24,7 +24,7 @@ export async function POST(request: Request) {
 
     const searchPromises = queries.map(q => 
       Promise.race([
-        yts(q),
+        youtube.search(q),
         new Promise<any>((_, reject) => setTimeout(() => reject(new Error('Timeout scraping YouTube')), 8000))
       ])
     );
@@ -43,21 +43,22 @@ export async function POST(request: Request) {
     let allVideos: any[] = [];
 
     for (const r of results) {
+      if (!r || !r.videos) continue;
       for (const item of r.videos) {
-        if (!seen.has(item.videoId)) {
-          seen.add(item.videoId);
+        if (!seen.has(item.id)) {
+          seen.add(item.id);
           allVideos.push({
             platform: 'youtube',
-            url: item.url,
-            videoId: item.videoId,
-            author: item.author?.name || 'Unknown',
+            url: item.link,
+            videoId: item.id,
+            author: item.channel?.name || 'Unknown',
             title: item.title || '',
             thumbnailUrl: item.thumbnail || '',
             views: item.views || 0,
             likes: 0,
             comments: 0,
-            duration: item.duration?.seconds || 0,
-            publishedAt: item.ago || '',
+            duration: item.duration || 0,
+            publishedAt: item.uploaded || '',
           });
         }
       }
