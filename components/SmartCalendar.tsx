@@ -303,6 +303,8 @@ export default function SmartCalendar({ externalEvents = [], onAddEvent, onUpdat
       <FullCalendar
         plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}
         initialView="dayGridMonth"
+        contentHeight="auto"
+        height="auto"
         headerToolbar={{
           left: "prev,next today",
           center: "title",
@@ -317,7 +319,6 @@ export default function SmartCalendar({ externalEvents = [], onAddEvent, onUpdat
         editable={true}
         droppable={true}
         selectable={true}
-        height="100%"
       />
 
       <EventModal

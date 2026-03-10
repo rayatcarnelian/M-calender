@@ -15,52 +15,41 @@ export async function POST(request: Request) {
 
     console.log(`[Trend Scraper] Searching YouTube for '${keyword}' (target: ${targetCount})...`);
 
-    // Run multiple search queries in parallel for richer results
-    const queries = [
-      `${keyword} shorts`,
-      `${keyword} viral`,
-      `${keyword} trending 2026`,
-    ];
+    console.log(`[Trend Scraper] Searching YouTube for '${keyword}' (target: ${targetCount})...`);
 
-    const searchPromises = queries.map(q => 
-      Promise.race([
-        youtube.search(q),
-        new Promise<any>((_, reject) => setTimeout(() => reject(new Error('Timeout scraping YouTube')), 8000))
-      ])
-    );
-    
-    const resultsSettled = await Promise.allSettled(searchPromises);
-    const results = resultsSettled
-      .filter((r): r is PromiseFulfilledResult<any> => r.status === 'fulfilled')
-      .map(r => r.value);
+    // Run a single search query to avoid Vercel IP blocking and timeouts
+    let searchResult;
+    try {
+      searchResult = await youtube.search(keyword + " trending");
+    } catch (e) {
+      console.error("Youtube Search Failed:", e);
+      return NextResponse.json({ error: "Failed to fetch from YouTube. Please try again." }, { status: 500 });
+    }
 
-    if (results.length === 0) {
-      return NextResponse.json({ error: "Search timed out or returned no results. Please try again." }, { status: 504 });
+    if (!searchResult || !searchResult.videos || searchResult.videos.length === 0) {
+      return NextResponse.json({ error: "Search returned no results. Please try again." }, { status: 404 });
     }
 
     // Merge all results, deduplicate by video ID
     const seen = new Set<string>();
     let allVideos: any[] = [];
 
-    for (const r of results) {
-      if (!r || !r.videos) continue;
-      for (const item of r.videos) {
-        if (!seen.has(item.id)) {
-          seen.add(item.id);
-          allVideos.push({
-            platform: 'youtube',
-            url: item.link,
-            videoId: item.id,
-            author: item.channel?.name || 'Unknown',
-            title: item.title || '',
-            thumbnailUrl: item.thumbnail || '',
-            views: item.views || 0,
-            likes: 0,
-            comments: 0,
-            duration: item.duration || 0,
-            publishedAt: item.uploaded || '',
-          });
-        }
+    for (const item of searchResult.videos) {
+      if (!seen.has(item.id)) {
+        seen.add(item.id);
+        allVideos.push({
+          platform: 'youtube',
+          url: item.link,
+          videoId: item.id,
+          author: item.channel?.name || 'Unknown',
+          title: item.title || '',
+          thumbnailUrl: item.thumbnail || '',
+          views: item.views || 0,
+          likes: 0,
+          comments: 0,
+          duration: item.duration || 0,
+          publishedAt: item.uploaded || '',
+        });
       }
     }
 
