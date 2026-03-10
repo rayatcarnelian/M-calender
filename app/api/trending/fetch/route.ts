@@ -24,6 +24,6 @@ export async function GET(request: Request) {
     return NextResponse.json({ videos });
   } catch (error) {
     console.error('[Trend Fetch] Error fetching cached videos:', error);
-    return NextResponse.json({ error: 'Failed to fetch trending videos' }, { status: 500 });
+    return NextResponse.json({ videos: [] });
   }
 }

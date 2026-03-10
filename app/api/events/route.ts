@@ -11,7 +11,8 @@ export async function GET() {
     return NextResponse.json(events);
   } catch (error) {
     console.error("Failed to fetch events:", error);
-    return NextResponse.json({ error: "Failed to fetch events" }, { status: 500 });
+    // Return empty array instead of error so the page still loads
+    return NextResponse.json([]);
   }
 }
 

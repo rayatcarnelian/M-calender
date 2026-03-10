@@ -75,7 +75,22 @@ export async function GET() {
     });
   } catch (error) {
     console.error("Settings GET error:", error);
-    return NextResponse.json({ error: "Failed to load settings" }, { status: 500 });
+    // Return defaults based on env vars when DB is unavailable
+    return NextResponse.json({
+      facebook: { hasClientId: false, connected: false },
+      instagram: { hasClientId: false, connected: false },
+      twitter: { hasClientId: false, connected: false },
+      linkedin: { hasClientId: false, connected: false },
+      youtube: { hasClientId: false, connected: false },
+      groq: { connected: !!process.env.GROQ_API_KEY },
+      together: { connected: !!process.env.TOGETHER_API_KEY },
+      fal: { connected: !!process.env.FAL_API_KEY },
+      elevenLabs: { connected: !!process.env.ELEVENLABS_API_KEY },
+      rapid: { connected: !!process.env.RAPID_API_KEY },
+      apify: { connected: !!process.env.APIFY_API_KEY },
+      pexels: { connected: !!process.env.PEXELS_API_KEY },
+      gemini: { connected: !!process.env.GEMINI_API_KEY },
+    });
   }
 }
 
