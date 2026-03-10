@@ -202,7 +202,7 @@ export default function IntegrationsModal({ isOpen, onClose }: IntegrationsModal
         onClick={(e) => e.stopPropagation()}
       >
         {/* Header */}
-        <div className="p-8 border-b border-white/5 flex-shrink-0 bg-white/[0.02]">
+        <div className="px-5 sm:px-8 py-5 sm:py-8 border-b border-white/5 flex-shrink-0 bg-white/[0.02]">
           <h2 className="text-2xl font-bold text-white tracking-wide">Social Integrations</h2>
           <p className="text-sm text-zinc-400 mt-2 font-medium">
             Connect your social media accounts for automated publishing.
@@ -210,7 +210,7 @@ export default function IntegrationsModal({ isOpen, onClose }: IntegrationsModal
         </div>
 
         {/* Platforms List */}
-        <div className="p-6 space-y-5 overflow-y-auto flex-grow scrollbar-thin scrollbar-thumb-zinc-700">
+        <div className="px-4 sm:px-6 py-4 sm:py-6 space-y-5 overflow-y-auto flex-grow scrollbar-thin scrollbar-thumb-zinc-700">
           {PLATFORMS.map((platform) => {
             const status = statuses[platform.id] || { hasClientId: false, connected: false, maskedToken: null };
             const isExpanded = expandedPlatform === platform.id;
@@ -221,7 +221,7 @@ export default function IntegrationsModal({ isOpen, onClose }: IntegrationsModal
                 className="rounded-2xl border border-white/10 bg-white/5 overflow-hidden transition-all shadow-lg hover:border-white/20"
               >
                 {/* Platform Header Row */}
-                <div className="flex items-center justify-between p-5 bg-black/20">
+                <div className="flex items-center justify-between p-4 sm:p-5 bg-black/20">
                   <div className="flex items-center gap-4">
                     <div
                       className="w-12 h-12 rounded-xl flex items-center justify-center text-[11px] font-bold uppercase tracking-wider border border-white/10 shadow-[0_0_15px_rgba(255,255,255,0.05)] bg-white/5"
@@ -305,7 +305,7 @@ export default function IntegrationsModal({ isOpen, onClose }: IntegrationsModal
                     </div>
 
                     {/* Step 2: Input fields */}
-                    <div className="space-y-4 bg-white/5 p-5 rounded-2xl border border-white/10 shadow-inner">
+                    <div className="space-y-4 bg-white/5 p-4 sm:p-5 rounded-2xl border border-white/10 shadow-inner">
                       <div>
                         <label className="block text-[11px] font-bold text-zinc-500 uppercase tracking-widest mb-2">Client ID</label>
                         <input
@@ -354,7 +354,7 @@ export default function IntegrationsModal({ isOpen, onClose }: IntegrationsModal
         </div>
 
         {/* Footer */}
-        <div className="p-6 border-t border-white/5 bg-white/[0.02] flex-shrink-0 flex items-center justify-between rounded-b-3xl">
+        <div className="px-5 sm:px-8 py-4 sm:py-6 border-t border-white/5 bg-white/[0.02] flex-shrink-0 flex items-center justify-between rounded-b-3xl">
           <p className="text-xs font-semibold text-zinc-500">
             Credentials are stored locally and encrypted.
           </p>

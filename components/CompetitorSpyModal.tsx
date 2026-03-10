@@ -132,7 +132,7 @@ export default function CompetitorSpyModal({
         onClick={(e) => e.stopPropagation()}
       >
         {/* Header */}
-        <div className="p-8 border-b border-white/5 flex items-center gap-5 bg-white/[0.02]">
+        <div className="px-5 sm:px-8 py-5 sm:py-8 border-b border-white/5 flex items-center gap-5 bg-white/[0.02]">
           <div className="w-14 h-14 rounded-2xl bg-indigo-500/10 border border-indigo-500/20 flex items-center justify-center text-indigo-400 shadow-[0_0_15px_rgba(99,102,241,0.2)]">
             <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line><line x1="11" y1="8" x2="11" y2="14"></line><line x1="8" y1="11" x2="14" y2="11"></line></svg>
           </div>
@@ -143,7 +143,7 @@ export default function CompetitorSpyModal({
         </div>
 
         {/* Body */}
-        <div className="p-8 overflow-y-auto flex-grow scrollbar-thin scrollbar-thumb-zinc-700">
+        <div className="px-5 sm:px-8 py-5 sm:py-8 overflow-y-auto flex-grow scrollbar-thin scrollbar-thumb-zinc-700">
           
           {phase === "input" && (
             <div className="space-y-8">
@@ -292,7 +292,7 @@ export default function CompetitorSpyModal({
         </div>
 
         {/* Footer */}
-        <div className="px-8 py-5 border-t border-white/5 bg-white/[0.02] flex justify-between items-center rounded-b-3xl">
+        <div className="px-5 sm:px-8 py-4 sm:py-5 border-t border-white/5 bg-white/[0.02] flex justify-between items-center rounded-b-3xl">
           <button 
             onClick={handleClose} 
             className="px-6 py-3 text-sm font-semibold text-zinc-400 hover:text-white transition-colors border border-transparent hover:border-white/10 rounded-xl hover:bg-white/5"

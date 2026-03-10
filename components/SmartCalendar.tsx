@@ -251,6 +251,28 @@ export default function SmartCalendar({ externalEvents = [], onAddEvent, onUpdat
           font-size: 0.75rem;
           font-weight: 500;
         }
+
+        /* Mobile Formatting */
+        @media (max-width: 640px) {
+          .fc .fc-toolbar {
+            flex-direction: column;
+            gap: 12px;
+          }
+          .fc .fc-toolbar-title {
+            font-size: 1.1rem;
+            text-align: center;
+          }
+          .fc .fc-button {
+            padding: 6px 12px;
+            font-size: 0.7rem;
+          }
+          .fc .fc-event {
+            min-height: 50px !important;
+          }
+          .calendar-container {
+             min-height: 80vh;
+          }
+        }
       `}</style>
 
       <FullCalendar

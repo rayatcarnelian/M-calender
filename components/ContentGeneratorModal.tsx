@@ -125,7 +125,7 @@ export default function ContentGeneratorModal({
       <div className="bg-white border border-slate-200 rounded-2xl w-full max-w-2xl shadow-2xl overflow-hidden" onClick={(e) => e.stopPropagation()}>
 
         {/* Header */}
-        <div className="px-8 pt-8 pb-2">
+        <div className="px-5 sm:px-8 pt-5 sm:pt-8 pb-2">
           <h2 className="text-xl font-bold text-slate-800 tracking-tight">
             {phase === "confirm" && "Generate 30-Day Content Plan"}
             {phase === "generating" && "Generating Content..."}
@@ -135,7 +135,7 @@ export default function ContentGeneratorModal({
         </div>
 
         {/* Body */}
-        <div className="px-8 py-6 flex-grow overflow-y-auto max-h-[65vh] scrollbar-thin scrollbar-thumb-slate-200 scrollbar-track-transparent">
+        <div className="px-5 sm:px-8 py-4 sm:py-6 flex-grow overflow-y-auto max-h-[75vh] sm:max-h-[65vh] scrollbar-thin scrollbar-thumb-slate-200 scrollbar-track-transparent">
           {phase === "confirm" && (
             <div className="space-y-6">
               <p className="text-sm text-slate-600 leading-relaxed font-medium">
@@ -275,7 +275,7 @@ export default function ContentGeneratorModal({
         </div>
 
         {/* Footer */}
-        <div className="px-8 pb-8 pt-4 flex items-center gap-3 justify-end border-t border-slate-100 bg-slate-50">
+        <div className="px-5 sm:px-8 pb-5 sm:pb-8 pt-4 flex items-center gap-3 justify-end border-t border-slate-100 bg-slate-50">
           <button onClick={onClose} className="py-2.5 px-6 text-sm font-semibold text-slate-500 hover:text-slate-800 transition-colors">
             Cancel
           </button>

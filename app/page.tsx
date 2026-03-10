@@ -143,9 +143,9 @@ export default function Home() {
   };
 
   return (
-    <main className="min-h-screen bg-[#050505] bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-zinc-900/40 via-[#050505] to-[#050505] text-zinc-100 flex flex-col font-sans selection:bg-indigo-500/30">
+    <main className="min-h-screen bg-[#050505] bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-zinc-900/40 via-[#050505] to-[#050505] text-zinc-100 flex flex-col font-sans selection:bg-indigo-500/30 overflow-x-hidden">
       {/* Top Navbar */}
-      <nav className="h-20 border-b border-white/5 bg-white/[0.02] backdrop-blur-xl flex items-center px-10 flex-shrink-0 z-40 relative">
+      <nav className="h-16 lg:h-20 border-b border-white/5 bg-white/[0.02] backdrop-blur-xl flex items-center px-4 lg:px-10 flex-shrink-0 z-40 relative">
         <div className="flex items-center gap-5">
           <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-indigo-500 via-purple-500 to-blue-600 flex items-center justify-center text-lg font-bold text-white shadow-[0_0_20px_rgba(99,102,241,0.3)] border border-white/10">
             V
@@ -177,10 +177,9 @@ export default function Home() {
         </div>
       </nav>
 
-      <div className="flex flex-grow overflow-hidden">
+      <div className="flex flex-col lg:flex-row flex-grow overflow-auto lg:overflow-hidden">
         {/* Left Sidebar */}
-        {/* Left Sidebar */}
-        <aside className="w-80 flex-shrink-0 border-r border-white/10 flex flex-col bg-white/[0.02] backdrop-blur-2xl relative z-10">
+        <aside className="w-full lg:w-80 flex-shrink-0 border-b lg:border-b-0 lg:border-r border-white/10 flex flex-col bg-white/[0.02] backdrop-blur-2xl relative z-10">
           {/* Quick Actions */}
           <div className="p-8 flex flex-col gap-5 flex-grow">
             <button

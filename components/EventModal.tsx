@@ -88,7 +88,7 @@ export default function EventModal({
         </div>
 
         {/* Body */}
-        <div className="p-6">
+        <div className="p-4 sm:p-6">
           <p className="text-xs text-gray-500 mb-4">
             Scheduling for:{" "}
             <span className="text-blue-400 font-medium">{selectedDate}</span>
