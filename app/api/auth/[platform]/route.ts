@@ -43,6 +43,14 @@ export async function GET(
   { params }: { params: Promise<{ platform: string }> }
 ) {
   const { platform } = await params;
+
+  // Skip NextAuth internal routes that clash with this dynamic [platform] route
+  const nextAuthReserved = ["error", "signin", "signout", "callback", "session", "csrf", "providers"];
+  if (nextAuthReserved.includes(platform)) {
+    // Let NextAuth handle these — return a passthrough 404 so Next.js falls through
+    return new NextResponse(null, { status: 404 });
+  }
+
   const config = OAUTH_CONFIG[platform];
 
   if (!config) {
