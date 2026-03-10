@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, Suspense } from "react";
 import { useSearchParams } from "next/navigation";
 
 interface ContentPackage {
@@ -36,6 +36,14 @@ const ASPECT_RATIOS = [
 ];
 
 export default function ContentStudio() {
+  return (
+    <Suspense fallback={<div className="min-h-screen bg-[#050505] text-white flex items-center justify-center"><div className="w-12 h-12 border-4 border-violet-500/30 border-t-violet-500 rounded-full animate-spin" /></div>}>
+      <ContentStudioInner />
+    </Suspense>
+  );
+}
+
+function ContentStudioInner() {
   const searchParams = useSearchParams();
   const importedVideoId = searchParams.get("videoId");
 
