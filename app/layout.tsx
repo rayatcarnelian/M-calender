@@ -1,4 +1,4 @@
-import { ClerkProvider } from "@clerk/nextjs";
+import { Providers } from "@/components/Providers";
 import type { Metadata } from "next";
 import "./globals.css";
 
@@ -13,8 +13,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <ClerkProvider>
-      <html lang="en">
+    <html lang="en">
         <head>
           <link
             href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
@@ -22,9 +21,8 @@ export default function RootLayout({
           />
         </head>
         <body className="antialiased">
-          {children}
+          <Providers>{children}</Providers>
         </body>
       </html>
-    </ClerkProvider>
   );
 }

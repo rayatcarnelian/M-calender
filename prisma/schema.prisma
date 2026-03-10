@@ -7,9 +7,24 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+model User {
+  id            String    @id @default(cuid())
+  email         String    @unique
+  password      String
+  name          String?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  events          Event[]
+  businessProfile BusinessProfile?
+  settings        Settings?
+  trendingVideos  TrendingVideo[]
+}
+
 model Event {
   id        String   @id @default(cuid())
-  userId    String   // Clerk user ID
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   title     String
   start     DateTime
   end       DateTime?
@@ -27,7 +42,8 @@ model Event {
 
 model BusinessProfile {
   id              String   @id @default(cuid())
-  userId          String   @unique // One profile per user
+  userId          String   @unique
+  user            User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   businessName    String
   industry        String
   targetAudience  String
@@ -39,8 +55,8 @@ model BusinessProfile {
 }
 
 model Settings {
-  // Use Clerk userId as the primary key id
-  id                    String   @id 
+  id                    String   @id
+  user                  User     @relation(fields: [id], references: [id], onDelete: Cascade)
   // Facebook / Meta
   facebookClientId      String?
   facebookClientSecret  String?
@@ -80,7 +96,8 @@ model Settings {
 
 model TrendingVideo {
   id              String   @id @default(cuid())
-  userId          String   // Clerk user ID
+  userId          String
+  user            User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   platform        String   // "youtube", "tiktok", "instagram"
   url             String
   author          String?

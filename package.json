@@ -14,7 +14,6 @@
     "test:ui": "node scripts/qa-test.js"
   },
   "dependencies": {
-    "@clerk/nextjs": "^7.0.2",
     "@fal-ai/client": "^1.9.4",
     "@fullcalendar/core": "^6.1.20",
     "@fullcalendar/daygrid": "^6.1.15",
@@ -25,6 +24,7 @@
     "@prisma/client": "^5.22.0",
     "@types/archiver": "^7.0.0",
     "archiver": "^7.0.1",
+    "bcryptjs": "^3.0.3",
     "cheerio": "^1.2.0",
     "dotenv": "^17.3.1",
     "elevenlabs": "^1.59.0",
@@ -34,6 +34,7 @@
     "groq-sdk": "^0.37.0",
     "instagram-scraper-api": "^1.0.1",
     "next": "^15.5.12",
+    "next-auth": "^4.24.13",
     "pdf-parse": "^2.4.5",
     "prisma": "^5.22.0",
     "react": "^19.0.0",
@@ -45,6 +46,7 @@
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4",
+    "@types/bcryptjs": "^2.4.6",
     "@types/node": "^22",
     "@types/react": "^19",
     "@types/react-dom": "^19",

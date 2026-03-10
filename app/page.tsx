@@ -7,9 +7,10 @@ import ContentGeneratorModal, { GeneratedPost } from "@/components/ContentGenera
 import IntegrationsModal from "@/components/IntegrationsModal";
 import CompetitorSpyModal from "@/components/CompetitorSpyModal";
 import Link from "next/link";
-import { Show, SignInButton, UserButton } from "@clerk/nextjs";
+import { useSession, signOut } from "next-auth/react";
 
 export default function Home() {
+  const { data: session, status } = useSession();
   const [profile, setProfile] = useState<BusinessProfile | null>(null);
   const [showProfileModal, setShowProfileModal] = useState(false);
   const [showContentModal, setShowContentModal] = useState(false);
@@ -164,16 +165,23 @@ export default function Home() {
               {profile.businessName}
             </button>
           )}
-          <Show when="signed-out">
-            <SignInButton mode="modal">
-              <button className="px-5 py-2 text-sm font-semibold text-white bg-indigo-600 hover:bg-indigo-500 rounded-full transition-all">
+          {status === "unauthenticated" ? (
+            <Link href="/login">
+              <button className="px-5 py-2 text-sm font-semibold text-white bg-indigo-600 hover:bg-indigo-500 rounded-full transition-all shadow-lg hover:-translate-y-0.5">
                 Sign In
               </button>
-            </SignInButton>
-          </Show>
-          <Show when="signed-in">
-            <UserButton appearance={{ elements: { avatarBox: "w-10 h-10" } }} />
-          </Show>
+            </Link>
+          ) : status === "authenticated" ? (
+            <button
+              onClick={() => signOut()}
+              className="w-10 h-10 rounded-full bg-gradient-to-br from-indigo-500 to-purple-600 border border-white/10 flex items-center justify-center text-sm font-bold text-white uppercase hover:shadow-[0_0_15px_rgba(99,102,241,0.5)] transition-all hover:scale-105"
+              title="Sign Out"
+            >
+              {session?.user?.name ? session.user.name.charAt(0) : session?.user?.email?.charAt(0) || "U"}
+            </button>
+          ) : (
+            <div className="w-10 h-10 rounded-full bg-white/5 animate-pulse border border-white/5" />
+          )}
         </div>
       </nav>
 

@@ -1,18 +1,26 @@
-import { clerkMiddleware, createRouteMatcher } from '@clerk/nextjs/server'
+import { withAuth } from "next-auth/middleware";
 
-const isPublicRoute = createRouteMatcher(['/']);
-
-export default clerkMiddleware(async (auth, request) => {
-  if (!isPublicRoute(request)) {
-    await auth.protect()
-  }
-})
+export default withAuth({
+  callbacks: {
+    authorized: ({ req, token }) => {
+      const path = req.nextUrl.pathname;
+      if (
+        path === "/" ||
+        path.startsWith("/login") ||
+        path.startsWith("/register") ||
+        path.startsWith("/api/auth") ||
+        path.startsWith("/api/register") ||
+        path.startsWith("/api/trending/scrape") || // Allow scrape to be triggered if needed, but our APIs check token
+        path.startsWith("/api/spy/scrape") || // Exclude scrape api
+        path.match(/\.(png|jpg|jpeg|gif|webp|svg|ico)$/)
+      ) {
+        return true;
+      }
+      return !!token;
+    },
+  },
+});
 
 export const config = {
-  matcher: [
-    // Skip Next.js internals and all static files, unless found in search params
-    '/((?!_next|[^?]*\\.(?:html?|css|js(?!on)|jpe?g|webp|png|gif|svg|ttf|woff2?|ico|csv|docx?|xlsx?|zip|webmanifest)).*)',
-    // Always run for API routes
-    '/(api|trpc)(.*)',
-  ],
-}
+  matcher: ["/((?!_next/static|_next/image|favicon.ico).*)"],
+};

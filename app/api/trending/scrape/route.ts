@@ -1,8 +1,8 @@
 import { NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
 import yts from 'yt-search';
-import { auth } from "@clerk/nextjs/server";
-
+import { getServerSession } from "next-auth/next";
+import { authOptions } from "@/lib/auth";
 export async function POST(request: Request) {
   try {
     const { keyword, platform = 'youtube', count = 10 } = await request.json();
@@ -56,7 +56,8 @@ export async function POST(request: Request) {
 
     console.log(`[Trend Scraper] Found ${allVideos.length} unique videos, returning top ${topVideos.length}`);
 
-    const { userId } = await auth();
+    const session = await getServerSession(authOptions);
+    const userId = session?.user?.id;
     if (!userId) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
