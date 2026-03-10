@@ -47,8 +47,9 @@ export async function GET(
   // Skip NextAuth internal routes that clash with this dynamic [platform] route
   const nextAuthReserved = ["error", "signin", "signout", "callback", "session", "csrf", "providers"];
   if (nextAuthReserved.includes(platform)) {
-    // Let NextAuth handle these — return a passthrough 404 so Next.js falls through
-    return new NextResponse(null, { status: 404 });
+    // Redirect to login page instead of showing a broken error page
+    const loginUrl = new URL("/login", req.nextUrl.origin);
+    return NextResponse.redirect(loginUrl);
   }
 
   const config = OAUTH_CONFIG[platform];
